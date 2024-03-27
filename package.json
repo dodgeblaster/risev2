@@ -1,0 +1,21 @@
+{
+    "name": "_2",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@aws-lite/client": "^0.20.0",
+        "@aws-lite/cloudformation": "^0.0.4",
+        "@aws-lite/lambda": "^0.0.5",
+        "@aws-lite/s3": "^0.1.20",
+        "@aws-lite/ssm": "^0.2.3",
+        "archiver": "^5.3.1",
+        "fs-extra": "^10.1.0"
+    }
+}
