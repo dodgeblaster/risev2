@@ -1,0 +1,1 @@
+export const config = { bucketName: "rise2testfunctions-bucket-mainbucket-ferz7mvpwbik"}

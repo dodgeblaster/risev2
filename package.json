@@ -4,7 +4,9 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build-functions": "esbuild ./rise_functions/index.mjs --bundle --outfile=rise-functions.mjs --minify --platform=node --format=esm",
+        "build-front": "esbuild ./rise_front/index.mjs --bundle --outfile=rise-front.mjs --minify --platform=node --format=esm"
     },
     "keywords": [],
     "author": "",
@@ -16,6 +18,10 @@
         "@aws-lite/s3": "^0.1.20",
         "@aws-lite/ssm": "^0.2.3",
         "archiver": "^5.3.1",
-        "fs-extra": "^10.1.0"
+        "fs-extra": "^10.1.0",
+        "json5": "^2.2.3"
+    },
+    "devDependencies": {
+        "esbuild": "^0.18.16"
     }
 }

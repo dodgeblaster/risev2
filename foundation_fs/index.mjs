@@ -7,114 +7,114 @@ import path from 'path'
  * Helpers
  */
 function formatWithTrailingSlash(x) {
-    return x[x.length - 1] !== '/' ? '/' : ''
+    return x + (x[x.length - 1] !== '/' ? '/' : '')
 }
 
 /**
  * Folders
  */
 export function getDirectories(input) {
-    const dirPath = input.projectRoot + input.path
-    const files = fs.readdirSync(dirPath)
-    const directories = files.filter((file) => {
-        const filePath = path.join(dirPath, file)
-        return fs.statSync(filePath).isDirectory()
-    })
+    // const dirPath = input.projectRoot + input.path
+    // const files = fs.readdirSync(dirPath)
+    // const directories = files.filter((file) => {
+    //     const filePath = path.join(dirPath, file)
+    //     return fs.statSync(filePath).isDirectory()
+    // })
 
-    return directories
+    // return directories
 
-    // return fsextra
-    //     .readdirSync(input.projectRoot + input.path, { withFileTypes: true })
-    //     .filter((dirent) => dirent.isDirectory())
-    //     .map((dirent) => dirent.name)
+    return fsextra
+        .readdirSync(input.projectRoot + input.path, { withFileTypes: true })
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name)
 }
 
 export async function makeDir(input) {
-    const directoryPath = input.projectRoot + input.path
-    try {
-        await fs.mkdirSync(directoryPath, { recursive: true })
-        //  console.log(`Directory "${directoryPath}" created successfully.`)
-    } catch (e) {
-        if (e.code === 'EEXIST') {
-            console.log(`Directory "${directoryPath}" already exists.`)
-            return
-            //throw new Error(e.message)
-        } else {
-            console.error(`Error creating directory "${directoryPath}":`, e)
-            throw new Error(e.message)
-        }
-    }
-
+    // const directoryPath = input.projectRoot + input.path
     // try {
-    //     await fsextra.mkdir(input.projectRoot + input.path)
+    //     await fs.mkdirSync(directoryPath, { recursive: true })
+    //     //  console.log(`Directory "${directoryPath}" created successfully.`)
     // } catch (e) {
-    //     if (e instanceof Error) {
-    //         if (e.message.startsWith('EEXIST: file already exists')) {
-    //             return
-    //         }
-    //         throw new Error(e.message)
+    //     if (e.code === 'EEXIST') {
+    //         console.log(`Directory "${directoryPath}" already exists.`)
+    //         return
+    //         //throw new Error(e.message)
     //     } else {
-    //         throw new Error('Unknown Error')
+    //         console.error(`Error creating directory "${directoryPath}":`, e)
+    //         throw new Error(e.message)
     //     }
     // }
+
+    try {
+        await fsextra.mkdir(input.projectRoot + input.path)
+    } catch (e) {
+        if (e instanceof Error) {
+            if (e.message.startsWith('EEXIST: file already exists')) {
+                return
+            }
+            throw new Error(e.message)
+        } else {
+            throw new Error('Unknown Error')
+        }
+    }
 }
 
 export async function removeDir(input) {
     const thepath = input.projectRoot + input.path
-    // fsextra.removeSync(path)
-    async function removeDirectory(directoryPath) {
-        try {
-            const files = await fs.readdirSync(directoryPath)
+    fsextra.removeSync(thepath)
+    // async function removeDirectory(directoryPath) {
+    //     try {
+    //         const files = await fs.readdirSync(directoryPath)
 
-            for (const file of files) {
-                const filePath = path.join(directoryPath, file)
-                const stats = await fs.statSync(filePath)
+    //         for (const file of files) {
+    //             const filePath = path.join(directoryPath, file)
+    //             const stats = await fs.statSync(filePath)
 
-                if (stats.isDirectory()) {
-                    await removeDirectory(filePath)
-                } else {
-                    await fs.unlinkSync(filePath)
-                }
-            }
+    //             if (stats.isDirectory()) {
+    //                 await removeDirectory(filePath)
+    //             } else {
+    //                 await fs.unlinkSync(filePath)
+    //             }
+    //         }
 
-            await fs.rmdirSync(directoryPath)
-            //  console.log(`Directory "${directoryPath}" removed successfully.`)
-        } catch (err) {
-            console.error(`Error removing directory "${directoryPath}":`, err)
-        }
-    }
-    await removeDirectory(thepath)
+    //         await fs.rmdirSync(directoryPath)
+    //         //  console.log(`Directory "${directoryPath}" removed successfully.`)
+    //     } catch (err) {
+    //         console.error(`Error removing directory "${directoryPath}":`, err)
+    //     }
+    // }
+    // await removeDirectory(thepath)
 }
 
 export function copyDir(input) {
     const source = input.projectRoot + input.source
     const target = input.projectRoot + input.target
 
-    //fsextra.copySync(source, target)
+    fsextra.copySync(source, target)
 
-    const copyFolder = async (src, dest) => {
-        try {
-            await fs.promises.mkdir(dest, { recursive: true })
-            const files = await fs.promises.readdir(src)
+    // const copyFolder = async (src, dest) => {
+    //     try {
+    //         await fs.promises.mkdir(dest, { recursive: true })
+    //         const files = await fs.promises.readdir(src)
 
-            for (const file of files) {
-                const srcPath = path.join(src, file)
-                const destPath = path.join(dest, file)
+    //         for (const file of files) {
+    //             const srcPath = path.join(src, file)
+    //             const destPath = path.join(dest, file)
 
-                const stats = await fs.promises.lstat(srcPath)
+    //             const stats = await fs.promises.lstat(srcPath)
 
-                if (stats.isDirectory()) {
-                    await copyFolder(srcPath, destPath)
-                } else {
-                    await fs.promises.copyFile(srcPath, destPath)
-                }
-            }
-        } catch (err) {
-            console.error(`Error copying folder: ${err}`)
-        }
-    }
+    //             if (stats.isDirectory()) {
+    //                 await copyFolder(srcPath, destPath)
+    //             } else {
+    //                 await fs.promises.copyFile(srcPath, destPath)
+    //             }
+    //         }
+    //     } catch (err) {
+    //         console.error(`Error copying folder: ${err}`)
+    //     }
+    // }
 
-    return copyFolder(source, target)
+    // return copyFolder(source, target)
     // .then(() => console.log('Folder copied successfully'))
     // .catch(console.error)
 }

@@ -131,6 +131,8 @@ function command(fn) {
             await fn()
             showCursor()
         } catch (e) {
+            console.log(e)
+            throw new Error(e)
             printErrorMessage(e.message)
             showCursor()
         }

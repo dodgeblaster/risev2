@@ -55,6 +55,7 @@ const getStackInfo = (region) => async (name) => {
 
     try {
         const result = await aws.CloudFormation.DescribeStacks(input)
+
         if (!result.Stacks || result.Stacks.length === 0) {
             throw new Error('No stacks found with the name ' + name)
         }

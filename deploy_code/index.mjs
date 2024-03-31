@@ -1,6 +1,7 @@
 import * as filesystem from '../foundation_fs/index.mjs'
 import * as aws from '../foundation_aws/index.mjs'
 import { deployInfra } from '../deploy_infra/index.mjs'
+import { makeBucket } from './makeBucket.mjs'
 import process from 'node:process'
 
 /**
@@ -10,13 +11,10 @@ import process from 'node:process'
  * @param {string} stage
  * @param {string} region
  */
-export async function deployCodeBucket(
-    { name, stage, region },
-    { deployInfraMock }
-) {
-    const bucketTemplate = aws.s3.makeBucket('Main')
+export async function deployCodeBucket({ name, stage, region }) {
+    const bucketTemplate = makeBucket('Main')
     const stackName = name + stage + '-bucket'
-    const deploy = deployInfraMock || deployInfra
+    const deploy = deployInfra
     const result = await deploy({
         name: stackName,
         stage,
@@ -39,8 +37,8 @@ export async function deployCodeBucket(
  * @param {string} config.functionsLocation
  * @param {string} config.zipTarget
  */
-export async function zipCode(config, mockFilesystem) {
-    const fs = mockFilesystem || filesystem
+export async function zipCode(config) {
+    const fs = filesystem
     function getLambdaFunctionPaths(folderName) {
         let lambdas = []
         try {
@@ -80,9 +78,9 @@ export async function zipCode(config, mockFilesystem) {
  * @param {string} config.zipTarget
  * @param {string} config.hiddenFolder
  */
-export async function uploadCode(config, mock) {
-    const fs = mock?.filesystem || filesystem
-    const uploadFile = mock?.uploadFile || aws.s3.uploadFile
+export async function uploadCode(config) {
+    const fs = filesystem
+    const uploadFile = aws.s3.uploadFile
     const getAllPaths = () => {
         const lambaPaths = config.functionsLocation
         const lambdas = fs.getDirectories({
@@ -122,12 +120,15 @@ export async function uploadCode(config, mock) {
  * @param {string} config.zipTarget
  * @param {string} config.hiddenFolder
  */
-export async function updateLambdaCode(
-    { appName, stage, region, bucket, zipConfig },
-    mock
-) {
-    const getDirectories = mock.getDirectories || filesystem.getDirectories
-    const updateCode = mock.updateCode || aws.lambda.updateLambdaCode
+export async function updateLambdaCode({
+    appName,
+    stage,
+    region,
+    bucket,
+    zipConfig
+}) {
+    const getDirectories = filesystem.getDirectories
+    const updateCode = aws.lambda.updateLambdaCode
 
     const getAllPaths = () => {
         const lambaPaths = zipConfig.functionsLocation

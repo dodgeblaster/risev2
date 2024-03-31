@@ -7,7 +7,7 @@ import awsLite from '@aws-lite/client'
  */
 export async function uploadFile(props) {
     const aws = await awsLite({
-        region: region || process.env.AWS_REGION || 'us-east-1',
+        region: props.regoin || process.env.AWS_REGION || 'us-east-1',
         plugins: [import('@aws-lite/s3')]
     })
 

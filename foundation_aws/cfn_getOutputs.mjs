@@ -8,7 +8,7 @@ import awsLite from '@aws-lite/client'
  */
 export async function getOutputs(props) {
     const aws = await awsLite({
-        region: 'us-west-1',
+        region: 'us-east-1',
         plugins: [import('@aws-lite/cloudformation')]
     })
 
@@ -21,24 +21,28 @@ export async function getOutputs(props) {
         StackName: props.stack
     }
 
-    const x = await aws.CloudFormation.DescribeStacks(input)
+    try {
+        const x = await aws.CloudFormation.DescribeStacks(input)
 
-    if (!x.Stacks || x.Stacks.length === 0) {
-        throw new Error('No stacks found with the name ' + props.stack)
+        if (!x.Stacks || x.Stacks.length === 0) {
+            throw new Error('No stacks found with the name ' + props.stack)
+        }
+
+        const details = x.Stacks[0]
+
+        if (!details.Outputs) {
+            return {}
+        }
+
+        const res = {}
+        const outputs = details.Outputs
+
+        for (const o of props.outputs) {
+            res[o] = getOutput(outputs, o)
+        }
+
+        return res
+    } catch (e) {
+        throw new Error(e)
     }
-
-    const details = x.Stacks[0]
-
-    if (!details.Outputs) {
-        return {}
-    }
-
-    const res = {}
-    const outputs = details.Outputs
-
-    for (const o of props.outputs) {
-        res[o] = getOutput(outputs, o)
-    }
-
-    return res
 }
