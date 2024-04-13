@@ -6,7 +6,9 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build-functions": "esbuild ./rise_functions/index.mjs --bundle --outfile=rise-functions.mjs --minify --platform=node --format=esm",
-        "build-front": "esbuild ./rise_front/index.mjs --bundle --outfile=rise-front.mjs --minify --platform=node --format=esm"
+        "build-functions-old": "esbuild ./rise_functions/index.mjs --bundle --outfile=rise-functions.js --platform=node",
+        "build-front": "esbuild ./rise_front/index.mjs --bundle --outfile=rise-front.mjs --minify --platform=node --format=esm",
+        "build-front-old": "esbuild ./rise_front/index.mjs --bundle --outfile=rise-front.js --platform=node"
     },
     "keywords": [],
     "author": "",
