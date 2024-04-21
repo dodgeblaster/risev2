@@ -8,7 +8,8 @@
         "build-functions": "esbuild ./rise_functions/index.mjs --bundle --outfile=rise-functions.mjs --minify --platform=node --format=esm",
         "build-functions-old": "esbuild ./rise_functions/index.mjs --bundle --outfile=rise-functions.js --platform=node",
         "build-front": "esbuild ./rise_front/index.mjs --bundle --outfile=rise-front.mjs --minify --platform=node --format=esm",
-        "build-front-old": "esbuild ./rise_front/index.mjs --bundle --outfile=rise-front.js --platform=node"
+        "build-front-old": "esbuild ./rise_front/index.mjs --bundle --outfile=rise-front.js --platform=node",
+        "build-infra-old": "esbuild ./rise_infra/index.mjs --bundle --outfile=rise-infra.js --platform=node"
     },
     "keywords": [],
     "author": "",

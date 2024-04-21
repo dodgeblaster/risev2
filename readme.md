@@ -5,7 +5,7 @@
 ### Install
 
 ```bash
-curl https://raw.githubusercontent.com/dodgeblaster/risev2/main/rise-functions.mjs > rise-functions.mjs
+curl https://raw.githubusercontent.com/dodgeblaster/risev2/main/rise-functions.js > rise-functions.js
 ```
 
 ## Rise Front
@@ -13,5 +13,13 @@ curl https://raw.githubusercontent.com/dodgeblaster/risev2/main/rise-functions.m
 ### Install
 
 ```bash
-curl https://raw.githubusercontent.com/dodgeblaster/risev2/main/rise-front.mjs > rise-front.mjs
+curl https://raw.githubusercontent.com/dodgeblaster/risev2/main/rise-front.js > rise-front.js
+```
+
+## Rise Infra
+
+### Install
+
+```bash
+curl https://raw.githubusercontent.com/dodgeblaster/risev2/main/rise-infra.js > rise-infra.js
 ```
