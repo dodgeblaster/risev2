@@ -23,3 +23,11 @@ curl https://raw.githubusercontent.com/dodgeblaster/risev2/main/rise-front.js > 
 ```bash
 curl https://raw.githubusercontent.com/dodgeblaster/risev2/main/rise-infra.js > rise-infra.js
 ```
+
+## Rise Pipeline
+
+### Install
+
+```bash
+curl https://raw.githubusercontent.com/dodgeblaster/risev2/main/rise-pipeline.js > rise-pipeline.js
+```
