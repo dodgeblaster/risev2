@@ -21,6 +21,7 @@
         "@aws-lite/lambda": "^0.0.5",
         "@aws-lite/s3": "^0.1.20",
         "@aws-lite/ssm": "^0.2.3",
+        "@aws-sdk/client-cloudwatch": "^3.564.0",
         "archiver": "^5.3.1",
         "fs-extra": "^10.1.0",
         "json5": "^2.2.3"

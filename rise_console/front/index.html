@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <body>
+        <div class="h-10 flex items-center px-4 bg-zinc-800 text-white">
+            <p class="font-bold">RISE CONSOLE: Pipelines</p>
+        </div>
+        <div class="flex">
+            <div id="app" style="flex: 0 0 420px"></div>
+            <div
+                id="logs"
+                style="
+                    flex: 1;
+                    height: 100vh;
+                    display: none;
+                    overflow-y: scroll;
+                "
+            ></div>
+        </div>
+    </body>
+    <script type="module">
+        const svgCheck = `<svg class='h-4 w-4 text-white' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg>`
+        const svgProgress = `<svg class='h-4 w-4 text-blue-400' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>`
+        const svgFail = `<svg class='h-4 w-4 text-red-400' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`
+
+        const svgGithub = `<svg class='h-6 mr-4' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>`
+        const svgTerminal = `<svg class="h-6 mr-4" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs> <linearGradient x1="0%" y1="100%" x2="100%" y2="0%" id="linearGradient-3"><stop stop-color="#2E27AD" offset="0%"></stop><stop stop-color="#527FFF" offset="100%"></stop> </linearGradient></defs><g id="Icon-Architecture/16/Arch_AWS-CodeBuild_16" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Rectangle" fill="url(#linearGradient-3)"><rect x="0" y="0" width="24" height="24"></rect> </g> <path d="M12.146,14.854 C11.951,14.659 11.951,14.342 12.146,14.147 L13.146,13.147 L13.853,13.854 L13.207,14.5 L13.853,15.147 L13.146,15.854 L12.146,14.854 Z M15.985,16.622 L15.014,16.379 L16.014,12.379 L16.985,12.622 L15.985,16.622 Z M11,17 L19,17 L19,12 L11,12 L11,17 Z M14.522,10.048 L16.903,11 L12.618,11 L14.522,10.048 Z M5,7 L5,5 L17.232,5 L18.565,7 L5,7 Z M6,19 L8,19 L8,8 L6,8 L6,19 Z M19.684,11.038 L19.685,11.036 L15,9.162 L15,8 L19.5,8 C19.684,8 19.853,7.899 19.94,7.736 C20.028,7.574 20.018,7.376 19.916,7.223 L17.916,4.223 C17.823,4.084 17.667,4 17.5,4 L4.5,4 C4.223,4 4,4.224 4,4.5 L4,7.5 C4,7.777 4.223,8 4.5,8 L5,8 L5,19.5 C5,19.777 5.223,20 5.5,20 L8.5,20 C8.776,20 9,19.777 9,19.5 L9,8 L14,8 L14,9.191 L10.276,11.053 L10.278,11.058 C10.115,11.14 10,11.305 10,11.5 L10,17.5 C10,17.777 10.223,18 10.5,18 L19.5,18 C19.776,18 20,17.777 20,17.5 L20,11.5 C20,11.29 19.869,11.111 19.684,11.038 L19.684,11.038 Z" id="AWS-CodeBuild_Icon_16_Squid" fill="#FFFFFF" ></path></g></svg>`
+        const svgCfn = `<svg class="h-4 mr-4" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient x1="0%" y1="100%" x2="100%" y2="0%" id="linearGradient-2"><stop stop-color="#B0084D" offset="0%"></stop><stop stop-color="#FF4F8B" offset="100%"></stop></linearGradient></defs><g id="Icon-Architecture/16/Arch_AWS-CloudFormation_16" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Rectangle" fill="url(#linearGradient-2)"><rect x="0" y="0" width="24" height="24"></rect></g><path d="M5.97544475,14.9516681 L9.98446505,14.9516681 L9.98446505,13.9411009 L5.97544475,13.9411009 L5.97544475,14.9516681 Z M5.97544475,10.901315 L8.98220997,10.901315 L8.98220997,9.89074784 L5.97544475,9.89074784 L5.97544475,10.901315 Z M5.97544475,12.9618614 L11.9889752,12.9618614 L11.9889752,11.9512942 L5.97544475,11.9512942 L5.97544475,12.9618614 Z M10.9446254,17.9894329 L5.00225507,17.9894329 L5.00225507,8.78720853 L10.9446254,8.78720853 L10.9446254,10.9154629 L11.9468805,10.9154629 L11.9468805,8.28192497 C11.9468805,8.00199787 11.7223753,7.7766414 11.4457529,7.7766414 L4.50112754,7.7766414 C4.22450514,7.7766414 4,8.00199787 4,8.28192497 L4,18.4947164 C4,18.773633 4.22450514,19 4.50112754,19 L11.4457529,19 C11.7223753,19 11.9468805,18.773633 11.9468805,18.4947164 L11.9468805,13.9471643 L10.9446254,13.9471643 L10.9446254,17.9894329 Z M20,10.938706 C20,13.053823 18.3933851,13.8491393 17.5444751,13.9734391 L12.9912303,13.9784919 L12.9912303,12.9679248 L17.4713104,12.9679248 C17.5605112,12.9477134 18.9977449,12.6677863 18.9977449,10.938706 C18.9977449,10.051428 18.5206715,9.57444033 17.4512653,9.39253825 C17.1936858,9.34908386 17.0132799,9.11362172 17.0353295,8.85188483 C17.0353295,8.84784256 17.0363317,8.84278973 17.0363317,8.83773689 C17.0142821,8.07576927 16.5592583,7.84131769 16.3608118,7.77462026 C16.0090203,7.65638391 15.6401904,7.75643006 15.4427462,8.02524091 C15.3335004,8.17379428 15.1470809,8.24857625 14.966675,8.2223015 C14.7842646,8.19400563 14.6309196,8.06768473 14.569782,7.89184605 C14.412428,7.44719651 14.1789025,7.15413204 13.8521674,6.82468716 C13.4673014,6.43966108 12.4109246,5.60998546 10.9456277,6.23148425 C10.5607617,6.39418556 10.2099724,6.71049307 9.93435229,7.14604751 L9.09045352,6.60034125 C9.47632172,5.9929904 9.98346279,5.54328803 10.5577549,5.29974135 C11.9609121,4.70451731 13.4592834,5.00667688 14.5607617,6.10920563 C14.7902781,6.3406255 15.0197945,6.59730955 15.2172388,6.92372274 C15.6492107,6.694324 16.1794037,6.64985904 16.6755199,6.81458149 C17.2548234,7.00861038 17.8682035,7.54320039 18.0095214,8.47898556 C19.6421949,8.90241319 20,10.0322272 20,10.938706 L20,10.938706 Z" id="AWS-CloudFormation_Icon_16_Squid" fill="#FFFFFF"></path></g></svg>`
+        const svgFunction = `<svg class="h-4 mr-4" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient x1="0%" y1="100%" x2="100%" y2="0%" id="linearGradient-1"><stop stop-color="#C8511B" offset="0%"></stop><stop stop-color="#FF9900" offset="100%"></stop></linearGradient></defs><g id="Icon-Architecture/16/Arch_AWS-Lambda_16" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Rectangle" fill="url(#linearGradient-1)"><rect x="0" y="0" width="24" height="24"></rect></g><path d="M8.35471698,19 L5.33377354,19 L8.87677893,11.806 L10.3893141,14.832 L8.35471698,19 Z M9.3369363,10.435 C9.25026989,10.262 9.06971487,10.153 8.87265196,10.153 L8.87058847,10.153 C8.67352556,10.153 8.49297054,10.264 8.40733588,10.437 L4.05028527,19.285 C3.97393629,19.439 3.98528546,19.622 4.07917407,19.767 C4.17409443,19.912 4.33814156,20 4.51560135,20 L8.68074777,20 C8.8809059,20 9.06249267,19.889 9.14812734,19.714 L11.4282793,15.043 C11.4943109,14.907 11.4932791,14.748 11.4262158,14.611 L9.3369363,10.435 Z M18.968257,19 L15.7987426,19 L10.1747116,7.289 C10.0901087,7.113 9.90749017,7 9.70733203,7 L7.61598901,7 L7.6180525,5 L11.7883576,5 L17.386595,16.71 C17.471198,16.887 17.6548482,17 17.8550063,17 L18.968257,17 L18.968257,19 Z M19.4841285,16 L18.1841324,16 L12.5869267,4.29 C12.5023238,4.113 12.3186735,4 12.1174836,4 L7.10321275,4 C6.81845169,4 6.58734126,4.224 6.58734126,4.5 L6.58424603,7.5 C6.58424603,7.632 6.63892841,7.759 6.73591225,7.854 C6.83186434,7.947 6.9628957,8 7.10011752,8 L9.37820602,8 L15.002237,19.711 C15.0868399,19.887 15.2694584,20 15.4696166,20 L19.4841285,20 C19.7688896,20 20,19.776 20,19.5 L20,16.5 C20,16.224 19.7688896,16 19.4841285,16 L19.4841285,16 Z" id="AWS-Lambda_Icon_16_Squid" fill="#FFFFFF"></path></g></svg>`
+
+        function makeAction(a) {
+            let color = 'red'
+            if (a.status === 'InProgress') {
+                color = 'blue'
+            }
+            if (a.status === 'Succeeded') {
+                color = 'green'
+            }
+            return `<div class='mb-1 p-2 flex flex items-center shadow rounded-lg border border-zinc-100'>
+                <div class='bg-${color}-400 rounded p-1 mr-4'>
+                ${a.status === 'Succeeded' ? svgCheck : ''}
+                ${a.status === 'InProgress' ? svgProgress : ''}
+                ${a.status === 'Failed' ? svgFail : ''}
+                ${a.status === 'Stopped' ? svgFail : ''}
+                ${a.status === 'Stopping' ? svgFail : ''}
+                ${a.status === 'Cancelled' ? svgFail : ''}
+                </div>
+
+                
+                ${a.type === 'Build' ? svgTerminal : ''}
+                ${a.type === 'Source' ? svgGithub : ''}
+                ${a.type === 'Deploy' ? svgCfn : ''}
+                ${a.type === 'Invoke' ? svgFunction : ''}
+                <p class='ml-auto text-xs'>${a.name}</p> 
+                ${
+                    a.isBuildProject
+                        ? `<button class='text-xs rounded-lg bg-zinc-100 py-1 px-4' style='margin-left: auto' data-logname="${a.logGroup}" onclick="getLogs('${a.logGroup}')">Logs</button>`
+                        : ''
+                } 
+                 
+            </div>`
+        }
+
+        function makeStage(s) {
+            return `<div class='mb-2 rounded-lg p-4' style='width: 400px;'>
+                <p class='font-bold mb-1'>${s.name}</p>    
+                <p class='text-xs text-zinc-400 mb-4'>${s.time}</p>    
+                ${s.actions.map(makeAction).join('')}
+            </div>`
+        }
+
+        fetch('/api/pipeline', {
+            method: 'POST',
+            body: JSON.stringify({
+                name: 'pogpool-pipeline'
+            })
+        })
+            .then((x) => x.json())
+            .then((x) => {
+                const ex = x.executions[0]
+
+                let html = ex.stages.map((s) => {
+                    return makeStage(s)
+                }).join(`
+                <div class='flex justify-center mx-4' style='width: 375px;'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+                </div>`)
+                //
+
+                document.getElementById('app').innerHTML = html
+            })
+
+        window.getLogs = async function getLogs(logName) {
+            fetch('/api/logs', {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: logName
+                })
+            })
+                .then((x) => x.json())
+                .then((x) => {
+                    //
+
+                    let html = `<div class="relative top-0 bottom-0 right-0 left-0 flex justify-center items-center bg-gray-800 bg-opacity-0">
+            <div class="bg-gray-800 text-white font-mono  px-4 py-4 text-xs overflow-scroll h-5/6 w-5/6 rounded-lg relative shadow-md">
+                <button
+                    onclick="closeLogs()"
+                    style='top: 4px; right: 4px;'
+                    class="bg-gray-700 text-gray-500 absolute  px-4 py-2 text-xs rounded"
+                >
+                    Close
+                </button>
+                <div class="px-2 py-2 text-gray-300 flex">
+                   ${svgTerminal}
+                    <span class="font-sans ml-2 text-xl font-bold">
+                        Code Build Logs for <span class="text-gray-400">${logName}</span>
+                    </span>
+                </div>
+                <hr class="py-2 border-gray-700 px-10" />
+                <div>
+                ${x
+                    .map((x, i) => {
+                        return `<div class="py-1 text-gray-200 flex">
+                        <span class="inline-block mr-2 text-gray-500">${
+                            i + 1
+                        }</span>
+                        <span class="flex-1" style='font-family: monospace; -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;'>${x}</span>
+                    </div>`
+                    })
+                    .join('')}
+                </div>
+            </div>
+        </div>`
+
+                    document.getElementById('logs').innerHTML = html
+                    document.getElementById('logs').style.display = 'block'
+                })
+        }
+
+        window.closeLogs = function () {
+            document.getElementById('logs').style.display = 'none'
+        }
+    </script>
+</html>
